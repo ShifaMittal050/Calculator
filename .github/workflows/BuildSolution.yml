@@ -11,13 +11,16 @@ jobs:
     steps:
     # Step 1: Checkout the repository code
     - name: Checkout repository
-      uses: actions/checkout@v3
- 
-    # Step 2: Set up .NET SDK (automatically installs the latest version of .NET 7)
-    - name: Set up .NET SDK
-      uses: actions/setup-dotnet@v3
+      uses: actions/checkout@v4
+    - uses: nuget/setup-nuget@v2
+      name: Use nuget 6.x
       with:
-        dotnet-version: '7.x'  # Specify your .NET version (7.x in this case)
+        nuget-version: '6.x'
+    # # Step 2: Set up .NET SDK (automatically installs the latest version of .NET 7)
+    # - name: Set up .NET SDK
+    #   uses: actions/setup-dotnet@v3
+    #   with:
+    #     dotnet-version: '7.x'  # Specify your .NET version (7.x in this case)
  
     # Step 3: Change directory to where your solution is located (e.g., 'src')
     - name: Set working directory to 'src'
@@ -25,11 +28,11 @@ jobs:
  
     # Step 4: Restore NuGet dependencies from the solution in the 'src' folder
     - name: Restore dependencies
-      run: dotnet restore ./AnyStore.sln  # Replace with your actual solution file name
+      run: dotnet restore ./src/Calculator.sln  # Replace with your actual solution file name
  
     # Step 5: Build the solution
     - name: Build the solution
-      run: dotnet build ./AnyStore.sln --configuration Release  
+      run: dotnet build ./src/Calculator.sln --configuration Release  
  
     # # Step 6: Run tests (if applicable)
     # - name: Run tests
@@ -37,7 +40,7 @@ jobs:
  
     # Optional: Publish the build (e.g., create an artifact or deploy)
     - name: Publish build
-      run: dotnet publish ./YourSolution.sln --configuration Release --output ./publish
+      run: dotnet publish ./src/Calculator.sln --configuration Release --output ./publish
  
     # Optional: Archive and upload build artifacts (for further use, like deployment)
     - name: Upload Artifact
