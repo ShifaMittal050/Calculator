@@ -1,0 +1,47 @@
+name: BuildSolution
+ 
+# Trigger workflow on push and pull request events
+on:
+  workflow_dispatch:
+ 
+jobs:
+  build:
+    runs-on: windows-latest
+ 
+    steps:
+    # Step 1: Checkout the repository code
+    - name: Checkout repository
+      uses: actions/checkout@v3
+ 
+    # Step 2: Set up .NET SDK (automatically installs the latest version of .NET 7)
+    - name: Set up .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.x'  # Specify your .NET version (7.x in this case)
+ 
+    # Step 3: Change directory to where your solution is located (e.g., 'src')
+    - name: Set working directory to 'src'
+      run: cd . # Change this path to your folder containing the solution
+ 
+    # Step 4: Restore NuGet dependencies from the solution in the 'src' folder
+    - name: Restore dependencies
+      run: dotnet restore ./AnyStore.sln  # Replace with your actual solution file name
+ 
+    # Step 5: Build the solution
+    - name: Build the solution
+      run: dotnet build ./AnyStore.sln --configuration Release  
+ 
+    # # Step 6: Run tests (if applicable)
+    # - name: Run tests
+    #   run: dotnet test ./YourSolution.sln --configuration Release  # Replace with your actual solution file name
+ 
+    # Optional: Publish the build (e.g., create an artifact or deploy)
+    - name: Publish build
+      run: dotnet publish ./YourSolution.sln --configuration Release --output ./publish
+ 
+    # Optional: Archive and upload build artifacts (for further use, like deployment)
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: dotnet-build-artifact
+        path: ./publish
